@@ -163,28 +163,3 @@ class PrettyPrinter(object):
         return [t for t in flatten(stats)]
 
 
-if __name__ == '__main__':
-    # Warning: this in not very robust - it is just a stupid demo
-    import sys
-    from optparse import OptionParser
-
-    parser = OptionParser(usage='./cc.py [options] *.py')
-    parser.add_option('-v', '--verbose',
-            dest='verbose', action='store_true', default=False,
-            help='print detailed statistics to stdout')
-
-    options, args = parser.parse_args()
-
-    for arg in args:
-        module_name = arg[:-3] # cut off the .py
-        try:
-            code = open(arg).read()
-            stats = measure_complexity(code, module_name)
-        except Exception, e:
-            sys.stderr.write('Failed to process %r: %s: %s\n'
-                    % (arg, e.__class__.__name__, str(e)))
-            continue
-
-        pp = PrettyPrinter(sys.stdout, verbose=options.verbose)
-        pp.pprint(module_name, stats)
-
